@@ -57,7 +57,7 @@ jobs:
     - name: Configure CMake (Windows)
       if: matrix.os == 'windows-latest'
       run: |
-        cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=$env:CMAKE_TOOLCHAIN_FILE -DVCPKG_TARGET_TRIPLET=$env:VCPKG_TARGET_TRIPLET
+        cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE="${env:CMAKE_TOOLCHAIN_FILE}" -DVCPKG_TARGET_TRIPLET="${env:VCPKG_TARGET_TRIPLET}"
         
     - name: Configure CMake (Unix)
       if: matrix.os != 'windows-latest'
