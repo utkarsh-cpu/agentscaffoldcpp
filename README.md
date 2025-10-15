@@ -337,23 +337,16 @@ BaseNode (lifecycle: prep → exec → post)
 
 PocketFlow-CPP delivers significant performance improvements over Python while maintaining API compatibility:
 
-- **🏃‍♂️ Speed**: 10-50x faster execution compared to Python version
+- **🏃‍♂️ Speed**: 3.16-3.42x faster execution compared to Python version
 - **💾 Memory**: Header-only design eliminates runtime overhead
 - **🔧 Efficiency**: Smart pointer management with minimal allocations
 - **📈 Scalability**: Efficient JSON handling with nlohmann/json
 - **⚡ Concurrency**: Native async support for I/O-bound operations
 - **🔄 Parallelism**: True parallel batch processing for CPU-bound tasks
 
-### Performance Benchmarks
+For detailed performance analysis, benchmarks, and optimization recommendations, see the [Performance Analysis Report](docs/PERFORMANCE_ANALYSIS_REPORT.md).
 
-| Operation | Python (ms) | C++ (ms) | Speedup |
-|-----------|-------------|----------|---------|
-| Sequential Flow (5 nodes) | 150 | 12 | 12.5x |
-| Batch Processing (100 items) | 2,300 | 180 | 12.8x |
-| Parallel Batch (100 items) | 2,300 | 45 | 51.1x |
-| Async Flow (I/O simulation) | 1,200 | 85 | 14.1x |
 
-*Benchmarks run on Intel i7-10700K, processing JSON data with simulated LLM calls*
 
 ## Troubleshooting
 
