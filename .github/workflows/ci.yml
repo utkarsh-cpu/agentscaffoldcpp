@@ -10,9 +10,14 @@ jobs:
   test:
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
         compiler: [gcc, clang]
+        exclude:
+          # Windows with GCC can be problematic with vcpkg
+          - os: windows-latest
+            compiler: gcc
 
 
     steps:
@@ -33,9 +38,29 @@ jobs:
       if: matrix.os == 'windows-latest'
       run: |
         choco install cmake ninja
-        vcpkg install gtest nlohmann-json
+        # Use vcpkg to install dependencies
+        vcpkg install gtest:x64-windows nlohmann-json:x64-windows
+        echo "CMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake" >> $env:GITHUB_ENV
+        echo "VCPKG_TARGET_TRIPLET=x64-windows" >> $env:GITHUB_ENV
 
-    - name: Configure CMake
+    - name: Set compiler environment
+      shell: bash
+      run: |
+        if [[ "${{ matrix.compiler }}" == "clang" ]]; then
+          echo "CC=clang" >> $GITHUB_ENV
+          echo "CXX=clang++" >> $GITHUB_ENV
+        elif [[ "${{ matrix.compiler }}" == "gcc" ]]; then
+          echo "CC=gcc" >> $GITHUB_ENV
+          echo "CXX=g++" >> $GITHUB_ENV
+        fi
+
+    - name: Configure CMake (Windows)
+      if: matrix.os == 'windows-latest'
+      run: |
+        cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=$env:CMAKE_TOOLCHAIN_FILE -DVCPKG_TARGET_TRIPLET=$env:VCPKG_TARGET_TRIPLET
+        
+    - name: Configure CMake (Unix)
+      if: matrix.os != 'windows-latest'
       run: |
         cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
         
