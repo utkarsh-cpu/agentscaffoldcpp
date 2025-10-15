@@ -1,8 +1,8 @@
-# PocketFlow-CPP
+# AgentScaffold-CPP
 
 A minimalist C++ LLM framework that captures the core abstraction of LLM frameworks through a graph-based approach. This is a C++ implementation of the original 100-line Python PocketFlow framework, maintaining the same simplicity and elegance while leveraging C++'s performance characteristics and type safety.
 
-PocketFlow-CPP enables you to build complex LLM applications using simple, composable nodes connected in graphs. Whether you're building agents, workflows, RAG systems, or multi-agent architectures, PocketFlow provides the foundational abstractions you need without the bloat of larger frameworks.
+AgentScaffold-CPP enables you to build complex LLM applications using simple, composable nodes connected in graphs. Whether you're building agents, workflows, RAG systems, or multi-agent architectures, this provides the foundational abstractions you need without the bloat of larger frameworks.
 
 ## Features
 
