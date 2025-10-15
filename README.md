@@ -491,7 +491,6 @@ MIT License - see [LICENSE](LICENSE) file for details.
 - 📖 [Full API Documentation](API.md)
 - 💬 [GitHub Discussions](https://github.com/your-repo/pocketflow-cpp/discussions)
 - 🐛 [Issue Tracker](https://github.com/your-repo/pocketflow-cpp/issues)
-- 📧 Email: support@pocketflow-cpp.org
 
 ---
 
