@@ -35,9 +35,9 @@ public:
         // Return loaded data
         return json{
             {"raw_data", json::array({
-                {"id", 1, "name", "Alice", "score", 85},
-                {"id", 2, "name", "Bob", "score", 92},
-                {"id", 3, "name", "Charlie", "score", 78}
+                json{{"id", 1}, {"name", "Alice"}, {"score", 85}},
+                json{{"id", 2}, {"name", "Bob"}, {"score", 92}},
+                json{{"id", 3}, {"name", "Charlie"}, {"score", 78}}
             })},
             {"metadata", {
                 {"source", source},
@@ -50,8 +50,9 @@ public:
     
     json post(const json& shared, const json& /* prep_result */, const json& exec_result) override {
         // Update shared state with loaded data
-        const_cast<json&>(shared)["loaded_data"] = exec_result["raw_data"];
-        const_cast<json&>(shared)["load_metadata"] = exec_result["metadata"];
+        json& mutable_shared = const_cast<json&>(shared);
+        mutable_shared["loaded_data"] = exec_result["raw_data"];
+        mutable_shared["load_metadata"] = exec_result["metadata"];
         
         std::cout << "✓ Data loaded successfully: " << exec_result["metadata"]["record_count"] 
                   << " records\n";
@@ -70,6 +71,9 @@ public:
     
     json prep(const json& shared) override {
         // Get data from shared state and processing parameters
+        if (!shared.contains("loaded_data")) {
+            throw std::runtime_error("DataProcessor: loaded_data not found in shared state");
+        }
         return json{
             {"data", shared["loaded_data"]},
             {"processing_mode", shared.value("processing_mode", "standard")},
@@ -78,50 +82,56 @@ public:
     }
     
     json exec(const json& prep_result) override {
-        json data = prep_result["data"];
-        std::string mode = prep_result["processing_mode"];
-        int threshold = prep_result["threshold"];
-        
-        std::cout << "Processing data in " << mode << " mode (threshold: " << threshold << ")\n";
-        
-        // Simulate processing time
-        std::this_thread::sleep_for(std::chrono::milliseconds(200));
-        
-        json processed_data = json::array();
-        int high_performers = 0;
-        
-        for (const auto& record : data) {
-            json processed_record = record;
-            int score = record["score"];
+        try {
+            json data = prep_result["data"];
+            std::string mode = prep_result["processing_mode"];
+            int threshold = prep_result["threshold"];
             
-            // Add computed fields
-            processed_record["grade"] = (score >= 90) ? "A" : 
-                                       (score >= 80) ? "B" : 
-                                       (score >= 70) ? "C" : "D";
-            processed_record["high_performer"] = (score >= threshold);
+            std::cout << "Processing data in " << mode << " mode (threshold: " << threshold << ")\n";
             
-            if (score >= threshold) {
-                high_performers++;
+            // Simulate processing time
+            std::this_thread::sleep_for(std::chrono::milliseconds(200));
+            
+            json processed_data = json::array();
+            int high_performers = 0;
+            
+            for (const auto& record : data) {
+                json processed_record = record;
+                int score = record["score"];
+                
+                // Add computed fields
+                processed_record["grade"] = (score >= 90) ? "A" : 
+                                           (score >= 80) ? "B" : 
+                                           (score >= 70) ? "C" : "D";
+                processed_record["high_performer"] = (score >= threshold);
+                
+                if (score >= threshold) {
+                    high_performers++;
+                }
+                
+                processed_data.push_back(processed_record);
             }
             
-            processed_data.push_back(processed_record);
+            return json{
+                {"processed_records", processed_data},
+                {"statistics", {
+                    {"total_records", data.size()},
+                    {"high_performers", high_performers},
+                    {"processing_mode", mode},
+                    {"threshold_used", threshold}
+                }}
+            };
+        } catch (const std::exception& e) {
+            std::cout << "DataProcessor exec error: " << e.what() << "\n";
+            throw;
         }
-        
-        return json{
-            {"processed_records", processed_data},
-            {"statistics", {
-                {"total_records", data.size()},
-                {"high_performers", high_performers},
-                {"processing_mode", mode},
-                {"threshold_used", threshold}
-            }}
-        };
     }
     
     json post(const json& shared, const json& /* prep_result */, const json& exec_result) override {
         // Update shared state with processed data
-        const_cast<json&>(shared)["processed_data"] = exec_result["processed_records"];
-        const_cast<json&>(shared)["processing_stats"] = exec_result["statistics"];
+        json& mutable_shared = const_cast<json&>(shared);
+        mutable_shared["processed_data"] = exec_result["processed_records"];
+        mutable_shared["processing_stats"] = exec_result["statistics"];
         
         int high_performers = exec_result["statistics"]["high_performers"];
         int total = exec_result["statistics"]["total_records"];
@@ -199,8 +209,9 @@ public:
     
     json post(const json& shared, const json& /* prep_result */, const json& exec_result) override {
         // Update shared state with validation results
-        const_cast<json&>(shared)["validation_results"] = exec_result["validation_results"];
-        const_cast<json&>(shared)["data_valid"] = exec_result["all_valid"];
+        json& mutable_shared = const_cast<json&>(shared);
+        mutable_shared["validation_results"] = exec_result["validation_results"];
+        mutable_shared["data_valid"] = exec_result["all_valid"];
         
         bool all_valid = exec_result["all_valid"];
         int total = exec_result["total_validated"];
@@ -264,8 +275,9 @@ public:
     
     json post(const json& shared, const json& /* prep_result */, const json& exec_result) override {
         // Update shared state with final results
-        const_cast<json&>(shared)["final_output"] = exec_result["output_data"];
-        const_cast<json&>(shared)["save_info"] = {
+        json& mutable_shared = const_cast<json&>(shared);
+        mutable_shared["final_output"] = exec_result["output_data"];
+        mutable_shared["save_info"] = {
             {"path", exec_result["save_path"]},
             {"size_bytes", exec_result["bytes_written"]}
         };
