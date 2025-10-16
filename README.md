@@ -317,7 +317,7 @@ See [API.md](API.md) for complete API documentation.
 
 ## Architecture Overview
 
-PocketFlow-CPP follows the same core abstractions as the original Python version:
+AgentScaffold-CPP follows the same core abstractions as the PocketFlow Python version:
 
 ```
 BaseNode (lifecycle: prep → exec → post)
@@ -335,7 +335,7 @@ BaseNode (lifecycle: prep → exec → post)
 
 ## Performance
 
-PocketFlow-CPP delivers significant performance improvements over Python while maintaining API compatibility:
+AgentScaffold-CPP delivers significant performance improvements over Python while maintaining API compatibility:
 
 - **🏃‍♂️ Speed**: 3.16-3.42x faster execution compared to Python version
 - **💾 Memory**: Header-only design eliminates runtime overhead
@@ -454,8 +454,8 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) f
 
 ### Development Setup
 ```bash
-git clone https://github.com/your-repo/pocketflow-cpp.git
-cd pocketflow-cpp
+git clone https://github.com/utkarsh-cpu/agentscaffoldcpp.git
+cd agentscaffoldcpp
 mkdir build && cd build
 cmake -DCMAKE_BUILD_TYPE=Debug ..
 make
