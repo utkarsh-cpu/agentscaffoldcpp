@@ -32,7 +32,7 @@ AgentScaffold-CPP enables you to build complex LLM applications using simple, co
 include(FetchContent)
 FetchContent_Declare(
     pocketflow_cpp
-    GIT_REPOSITORY https://github.com/your-repo/pocketflow-cpp.git
+    GIT_REPOSITORY https://github.com/utkarsh-cpu/agentscaffoldcpp.git
     GIT_TAG main
 )
 FetchContent_MakeAvailable(pocketflow_cpp)
@@ -43,7 +43,7 @@ target_link_libraries(your_target PRIVATE pocketflow_cpp::pocketflow_cpp)
 #### Manual Installation
 
 ```bash
-git clone https://github.com/your-repo/pocketflow-cpp.git
+git clone https://github.com/utkarsh-cpu/agentscaffoldcpp.git
 cd pocketflow-cpp
 mkdir build && cd build
 cmake ..
@@ -217,7 +217,7 @@ auto parallel_batch = std::make_shared<AsyncParallelBatchNode>();
 
 ### Quick Start
 ```bash
-git clone https://github.com/your-repo/pocketflow-cpp.git
+git clone https://github.com/utkarsh-cpu/agentscaffoldcpp.git
 cd pocketflow-cpp
 mkdir build && cd build
 cmake ..
