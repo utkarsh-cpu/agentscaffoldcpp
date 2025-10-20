@@ -23,7 +23,7 @@ public:
     explicit Node(int max_retries = 1, int wait_ms = 0) 
         : max_retries_(max_retries), wait_(wait_ms), cur_retry_(0) {}
     
-    virtual ~Node() = default;
+    ~Node() override = default;
     
     /**
      * Fallback method for handling failures after all retries are exhausted
